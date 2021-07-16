@@ -10,6 +10,15 @@
 class World : public HittableList {
 public:
     World();
+
+    [[nodiscard]] inline glm::dvec3 traceSky(const Ray &ray) const {
+        const glm::dvec3 direction = glm::normalize(ray.direction);
+        return glm::mix(groundColor, skyColor, direction.y * 0.5 + 0.5);
+    }
+
+private:
+    const glm::dvec3 groundColor{1.0};
+    const glm::dvec3 skyColor{0.5, 0.7, 1.0};
 };
 
 #endif //TRACER_WORLD_H

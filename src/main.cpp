@@ -7,14 +7,7 @@
 #include "material.h"
 #include "world.h"
 
-glm::dvec3 skyColor(const Ray &ray) {
-    const glm::dvec3 direction = glm::normalize(ray.direction);
-    constexpr glm::dvec3 groundColor{1.0};
-    constexpr glm::dvec3 skyColor{0.5, 0.7, 1.0};
-    return glm::mix(groundColor, skyColor, direction.y * 0.5 + 0.5);
-}
-
-glm::dvec3 raytrace(const Ray &ray, const Hittable &world, int depth) {
+glm::dvec3 raytrace(const Ray &ray, const World &world, int depth) {
     if (depth <= 0) return {0.0, 0.0, 0.0};
     HitRecord hit = world.hit(ray, 0.0001, std::numeric_limits<double>::infinity());
     if (hit.hit) {
@@ -25,7 +18,7 @@ glm::dvec3 raytrace(const Ray &ray, const Hittable &world, int depth) {
             return scatter.attenuation * raytrace(scatter.scatteredRay, world, depth - 1);
         }
     }
-    return skyColor(ray);
+    return world.traceSky(ray);
 }
 
 int main() {
@@ -45,7 +38,7 @@ int main() {
             glm::length(target - position)
     );
 
-    World world;
+    const World world;
 
     Image image(imageWidth, imageHeight);
 
