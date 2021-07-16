@@ -1,6 +1,5 @@
 #include <cstdio>
-#include <thread>
-#include <atomic>
+#include <execution>
 
 #include "image.h"
 #include "camera.h"
@@ -50,33 +49,21 @@ int main() {
 
     Image image(imageWidth, imageHeight);
 
+    // data for parallel execution
+    std::vector<int> ys(imageHeight);
+    std::iota(ys.begin(), ys.end(), 0);
+
     for (int i = 1; i <= samples; i++) {
         const double alpha = 1.0 / i;
 
-        std::atomic<int> nextLineToRender = 0;
-
-        std::vector<std::thread> threads;
-        threads.reserve(16);
-
-        for (int j = 0; j < 16; j++) {
-            threads.emplace_back([&]() {
-                while (true) {
-                    int y = nextLineToRender.fetch_add(1);
-                    if (y >= imageHeight) break;
-
-                    for (int x = 0; x < imageWidth; x++) {
-                        double u = (x + randomDouble()) / (imageWidth - 1);
-                        double v = (y + randomDouble()) / (imageHeight - 1);
-                        glm::dvec3 color = raytrace(camera.getRay(u, v), world, maxDepth);
-                        image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
-                    }
-                }
-            });
-        }
-
-        for (auto &thread: threads) {
-            thread.join();
-        }
+        std::for_each(std::execution::par_unseq, ys.begin(), ys.end(), [&](int y) {
+            for (int x = 0; x < imageWidth; x++) {
+                double u = (x + randomDouble()) / (imageWidth - 1);
+                double v = (y + randomDouble()) / (imageHeight - 1);
+                glm::dvec3 color = raytrace(camera.getRay(u, v), world, maxDepth);
+                image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
+            }
+        });
 
         printf("finished sample pass %d\n", i);
     }
