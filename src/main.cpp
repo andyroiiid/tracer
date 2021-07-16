@@ -1,4 +1,6 @@
 #include <cstdio>
+#include <thread>
+#include <atomic>
 
 #include "image.h"
 #include "camera.h"
@@ -49,15 +51,33 @@ int main() {
     Image image(imageWidth, imageHeight);
 
     for (int i = 1; i <= samples; i++) {
-        double alpha = 1.0 / i;
-        for (int y = 0; y < imageHeight; y++) {
-            for (int x = 0; x < imageWidth; x++) {
-                double u = (x + randomDouble()) / (imageWidth - 1);
-                double v = (y + randomDouble()) / (imageHeight - 1);
-                glm::dvec3 color = raytrace(camera.getRay(u, v), world, maxDepth);
-                image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
-            }
+        const double alpha = 1.0 / i;
+
+        std::atomic<int> nextLineToRender = 0;
+
+        std::vector<std::thread> threads;
+        threads.reserve(16);
+
+        for (int j = 0; j < 16; j++) {
+            threads.emplace_back([&]() {
+                while (true) {
+                    int y = nextLineToRender.fetch_add(1);
+                    if (y >= imageHeight) break;
+
+                    for (int x = 0; x < imageWidth; x++) {
+                        double u = (x + randomDouble()) / (imageWidth - 1);
+                        double v = (y + randomDouble()) / (imageHeight - 1);
+                        glm::dvec3 color = raytrace(camera.getRay(u, v), world, maxDepth);
+                        image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
+                    }
+                }
+            });
         }
+
+        for (auto &thread: threads) {
+            thread.join();
+        }
+
         printf("finished sample pass %d\n", i);
     }
 
