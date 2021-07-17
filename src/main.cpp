@@ -10,8 +10,21 @@ void renderLoop(GLFWwindow *window) {
 
     Quad quad;
     Texture texture(imageWidth, imageHeight);
+
+    constexpr glm::dvec3 position{2.0, 2.0, 2.0};
+    constexpr glm::dvec3 target{0.0, 0.0, 0.0};
+    constexpr glm::dvec3 up{0.0, 1.0, 0.0};
+    Camera camera(
+            position, target, up,
+            45.0,
+            double(imageWidth) / double(imageHeight),
+            0.2,
+            glm::length(target - position)
+    );
+
+    World world;
+
     PathTracer tracer(imageWidth, imageHeight, 32);
-    const Image &image = tracer.getImage();
 
     int iteration = 1;
     while (!glfwWindowShouldClose(window)) {
@@ -22,8 +35,8 @@ void renderLoop(GLFWwindow *window) {
         }
 
         if (iteration <= 256) {
-            tracer.sample(iteration);
-            texture.upload(image.data());
+            tracer.sample(camera, world, iteration);
+            texture.upload(tracer.getImage().data());
             glfwSetWindowTitle(window, ("iteration: " + std::to_string(iteration)).c_str());
             iteration++;
         }
@@ -41,8 +54,6 @@ void renderLoop(GLFWwindow *window) {
 
         glfwSwapBuffers(window);
     }
-
-    image.writeFile("test.png");
 }
 
 int main() {

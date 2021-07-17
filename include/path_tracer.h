@@ -13,20 +13,18 @@ class PathTracer {
 public:
     PathTracer(int imageWidth, int imageHeight, int maxDepth);
 
-    void sample(int iteration);
+    void sample(const Camera &camera, const World &world, int iteration);
 
-    [[nodiscard]] const Image &getImage() const { return image; }
+    [[nodiscard]] inline const Image &getImage() const { return image; }
 
 private:
-    glm::vec3 raytrace(const Ray &ray, int depth);
+    glm::vec3 raytrace(const Ray &ray, const World &world, int depth);
 
     const int imageWidth;
     const int imageHeight;
     const int maxDepth;
 
     Image image;
-    Camera camera;
-    const World world;
 
     // data for parallel execution
     std::vector<int> ys;
