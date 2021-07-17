@@ -11,7 +11,8 @@ add_executable(${PROJECT_NAME}
         shader.cpp
         quad_shader.cpp
         quad.cpp
-        texture.cpp)
+        texture.cpp
+        interactive_renderer.cpp)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE <glm/glm.hpp>)
 
