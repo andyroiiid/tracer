@@ -9,12 +9,12 @@
 
 class MetalMaterial : public Material {
 public:
-    explicit MetalMaterial(const glm::dvec3 &albedo, double roughness) : albedo(albedo), roughness(roughness) {}
+    explicit MetalMaterial(const glm::vec3 &albedo, double roughness) : albedo(albedo), roughness(roughness) {}
 
     [[nodiscard]] ScatterResult scatter(const Ray &ray, const HitRecord &hit) const override;
 
 private:
-    glm::dvec3 albedo;
+    glm::vec3 albedo;
     double roughness;
 };
 

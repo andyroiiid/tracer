@@ -19,6 +19,6 @@ void Image::writeFile(const std::string &filename) const {
     stbi_write_png(filename.c_str(), width, height, 3, data.data(), width * 3);
 }
 
-glm::u8vec3 Image::convertColor(const glm::dvec3 &color) {
-    return color * 255.0;
+glm::u8vec3 Image::convertColor(const glm::vec3 &color) {
+    return color * 255.0f;
 }

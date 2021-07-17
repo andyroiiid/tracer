@@ -17,18 +17,18 @@ public:
               height(height),
               pixels(width * height) {}
 
-    glm::dvec3 &pixel(int x, int y) {
+    glm::vec3 &pixel(int x, int y) {
         return pixels[x + y * width];
     }
 
     void writeFile(const std::string &filename) const;
 
-    static glm::u8vec3 convertColor(const glm::dvec3 &color);
+    static glm::u8vec3 convertColor(const glm::vec3 &color);
 
 private:
     int width = 0;
     int height = 0;
-    std::vector<glm::dvec3> pixels;
+    std::vector<glm::vec3> pixels;
 };
 
 #endif //TRACER_IMAGE_H

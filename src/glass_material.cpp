@@ -22,7 +22,7 @@ ScatterResult GlassMaterial::scatter(const Ray &ray, const HitRecord &hit) const
             glm::refract(unitDirection, hit.normal, refractionRatio);
 
     Ray refractedRay{hit.point, refractionDirection};
-    return {false, {1.0, 1.0, 1.0}, refractedRay};
+    return {false, {1.0f, 1.0f, 1.0f}, refractedRay};
 }
 
 double GlassMaterial::reflectance(double cosine, double refractionRatio) {

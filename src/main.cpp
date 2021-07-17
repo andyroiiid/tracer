@@ -11,16 +11,14 @@ int main() {
         printf("finished sample pass %d\n", i);
     }
 
-    tracer.getImage().writeFile("test.png");
-
-//    // gamma correction
-//    Image image = tracer.getImage();
-//    for (int y = 0; y < imageHeight; y++) {
-//        for (int x = 0; x < imageWidth; x++) {
-//            image.pixel(x, y) = glm::sqrt(image.pixel(x, y));
-//        }
-//    }
-//    image.writeFile("test.png");
+    // gamma correction
+    Image image = tracer.getImage();
+    for (int y = 0; y < imageHeight; y++) {
+        for (int x = 0; x < imageWidth; x++) {
+            image.pixel(x, y) = glm::sqrt(image.pixel(x, y));
+        }
+    }
+    image.writeFile("test.png");
 
     return 0;
 }

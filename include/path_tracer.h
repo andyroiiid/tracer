@@ -18,7 +18,7 @@ public:
     [[nodiscard]] const Image &getImage() const { return image; }
 
 private:
-    glm::dvec3 raytrace(const Ray &ray, int depth);
+    glm::vec3 raytrace(const Ray &ray, int depth);
 
     const int imageWidth;
     const int imageHeight;

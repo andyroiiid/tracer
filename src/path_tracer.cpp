@@ -34,19 +34,19 @@ void PathTracer::sample(int iteration) {
         for (int x = 0; x < imageWidth; x++) {
             double u = (x + randomDouble()) / (imageWidth - 1);
             double v = (y + randomDouble()) / (imageHeight - 1);
-            glm::dvec3 color = raytrace(camera.getRay(u, v), maxDepth);
+            glm::vec3 color = raytrace(camera.getRay(u, v), maxDepth);
             image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
         }
     });
 }
 
-glm::dvec3 PathTracer::raytrace(const Ray &ray, int depth) {
-    if (depth <= 0) return {0.0, 0.0, 0.0};
+glm::vec3 PathTracer::raytrace(const Ray &ray, int depth) {
+    if (depth <= 0) return {0.0f, 0.0f, 0.0f};
     HitRecord hit = world.hit(ray, 0.0001, std::numeric_limits<double>::infinity());
     if (hit.hit) {
         ScatterResult scatter = hit.material->scatter(ray, hit);
         if (scatter.dropRay) {
-            return {0.0, 0.0, 0.0};
+            return {0.0f, 0.0f, 0.0f};
         } else {
             return scatter.attenuation * raytrace(scatter.scatteredRay, depth - 1);
         }

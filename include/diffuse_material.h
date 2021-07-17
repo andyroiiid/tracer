@@ -9,12 +9,12 @@
 
 class DiffuseMaterial : public Material {
 public:
-    explicit DiffuseMaterial(const glm::dvec3 &albedo) : albedo(albedo) {}
+    explicit DiffuseMaterial(const glm::vec3 &albedo) : albedo(albedo) {}
 
     [[nodiscard]] ScatterResult scatter(const Ray &ray, const HitRecord &hit) const override;
 
 private:
-    glm::dvec3 albedo;
+    glm::vec3 albedo;
 };
 
 #endif //TRACER_DIFFUSE_MATERIAL_H

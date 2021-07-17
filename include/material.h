@@ -11,7 +11,7 @@ struct HitRecord;
 
 struct ScatterResult {
     bool dropRay;
-    glm::dvec3 attenuation;
+    glm::vec3 attenuation;
     Ray scatteredRay;
 };
 
