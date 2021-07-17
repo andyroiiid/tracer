@@ -4,6 +4,9 @@
 
 #include "world.h"
 
+#include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "sphere.h"
 #include "diffuse_material.h"
 #include "metal_material.h"
@@ -22,4 +25,18 @@ World::World() {
 
     std::shared_ptr<Material> ground = std::make_shared<DiffuseMaterial>(glm::vec3{0.5f, 0.5f, 0.5f});
     add(std::make_shared<Sphere>(glm::dvec3{0.0, -1000.5, 0.0}, 1000.0, ground));
+}
+
+bool World::ui() {
+    bool dirty = false;
+
+    if (ImGui::ColorEdit3("ground color", glm::value_ptr(groundColor))) {
+        dirty = true;
+    }
+
+    if (ImGui::ColorEdit3("sky color", glm::value_ptr(skyColor))) {
+        dirty = true;
+    }
+
+    return dirty;
 }

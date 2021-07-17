@@ -64,6 +64,12 @@ void InteractiveRenderer::ui() {
             cameraDirty = true;
         }
     }
+
+    if (ImGui::CollapsingHeader("world")) {
+        if (world.ui()) {
+            resetIteration();
+        }
+    }
 }
 
 void InteractiveRenderer::recreateResources(int width, int height) {
