@@ -16,12 +16,12 @@ public:
             const glm::dvec3 &lookFrom,
             const glm::dvec3 &lookAt,
             const glm::dvec3 &up,
-            double vFoVDegrees,
+            double vFoV,
             double aspectRatio,
             double aperture,
             double focusDistance
     ) {
-        double viewportHeight = 2.0 * glm::tan(glm::radians(vFoVDegrees) / 2.0);
+        double viewportHeight = 2.0 * glm::tan(vFoV / 2.0);
         double viewportWidth = aspectRatio * viewportHeight;
 
         glm::dvec3 w = glm::normalize(lookFrom - lookAt);
@@ -37,7 +37,7 @@ public:
 
     [[nodiscard]] Ray getRay(double u, double v) const {
         glm::dvec2 random = lensRadius * randomInCircle();
-        glm::dvec3 newOrigin = origin + u * random.x + u * random.y;
+        glm::dvec3 newOrigin = origin + u * random.x + v * random.y;
         return {newOrigin, lowerLeftCorner + u * horizontal + v * vertical - newOrigin};
     }
 

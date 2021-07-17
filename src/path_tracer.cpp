@@ -8,16 +8,15 @@
 
 #include "material.h"
 
-PathTracer::PathTracer(int imageWidth, int imageHeight, int maxDepth)
+PathTracer::PathTracer(int imageWidth, int imageHeight)
         : imageWidth(imageWidth),
           imageHeight(imageHeight),
-          maxDepth(maxDepth),
           image(imageWidth, imageHeight) {
     ys.resize(imageHeight);
     std::iota(ys.begin(), ys.end(), 0);
 }
 
-void PathTracer::sample(const Camera &camera, const World &world, int iteration) {
+void PathTracer::sample(const Camera &camera, const World &world, int iteration, int maxDepth) {
     double alpha = 1.0 / iteration;
     std::for_each(std::execution::par_unseq, ys.begin(), ys.end(), [&](int y) {
         for (int x = 0; x < imageWidth; x++) {

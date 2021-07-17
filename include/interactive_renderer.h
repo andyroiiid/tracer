@@ -14,23 +14,45 @@
 
 class InteractiveRenderer : NonCopyable {
 public:
-    void resize(int width, int height);
+    void resizeWindow(int newWidth, int newHeight);
 
-    inline void clearSamples() { iteration = 1; }
+    inline void resetIteration() { nextIteration = 1; }
 
-    void updateSamples(int iterationTarget);
+    void update();
 
     void draw();
 
+    void ui();
+
 private:
+    void recreateResources(int width, int height);
+
+    void recreateCamera();
+
     Quad quad;
+
+    bool resourcesDirty = true;
+
+    int windowWidth = 1;
+    int windowHeight = 1;
+    int downScale = 5;
+    int maxDepth = 32;
+
+    bool cameraDirty = true;
+
+    glm::vec3 cameraPosition{2.0f, 2.0f, 2.0f};
+    float cameraFoV = glm::radians(45.0f);
+    float cameraAperture = 0.1f;
+    float cameraFocusDistance = 3.0f;
+
     std::unique_ptr<Texture> texture;
     std::unique_ptr<PathTracer> pathTracer;
 
     Camera camera;
     World world;
 
-    int iteration = 1;
+    int nextIteration = 1;
+    int iterationTarget = 64;
 };
 
 #endif //TRACER_INTERACTIVE_RENDERER_H

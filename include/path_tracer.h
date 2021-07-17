@@ -11,9 +11,9 @@
 
 class PathTracer {
 public:
-    PathTracer(int imageWidth, int imageHeight, int maxDepth);
+    PathTracer(int imageWidth, int imageHeight);
 
-    void sample(const Camera &camera, const World &world, int iteration);
+    void sample(const Camera &camera, const World &world, int iteration, int maxDepth);
 
     [[nodiscard]] inline const Image &getImage() const { return image; }
 
@@ -22,7 +22,6 @@ private:
 
     const int imageWidth;
     const int imageHeight;
-    const int maxDepth;
 
     Image image;
 
