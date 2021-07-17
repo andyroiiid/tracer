@@ -17,8 +17,12 @@ public:
               height(height),
               pixels(width * height) {}
 
-    glm::vec3 &pixel(int x, int y) {
+    inline glm::vec3 &pixel(int x, int y) {
         return pixels[x + y * width];
+    }
+
+    [[nodiscard]] inline const float *data() const {
+        return &pixels.data()->x;
     }
 
     void writeFile(const std::string &filename) const;
