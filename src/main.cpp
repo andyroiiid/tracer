@@ -1,24 +1,64 @@
+#include <GLFW/glfw3.h>
+
+#include "quad.h"
+#include "texture.h"
 #include "path_tracer.h"
 
-int main() {
-    constexpr int imageWidth = 1024;
-    constexpr int imageHeight = 1024;
+void renderLoop(GLFWwindow *window) {
+    constexpr int imageWidth = 640;
+    constexpr int imageHeight = 360;
 
+    Quad quad;
+    Texture texture(imageWidth, imageHeight);
     PathTracer tracer(imageWidth, imageHeight, 32);
+    const Image &image = tracer.getImage();
 
-    for (int i = 1; i <= 32; i++) {
-        tracer.sample(i);
-        printf("finished sample pass %d\n", i);
-    }
+    int iteration = 1;
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
 
-    // gamma correction
-    Image image = tracer.getImage();
-    for (int y = 0; y < imageHeight; y++) {
-        for (int x = 0; x < imageWidth; x++) {
-            image.pixel(x, y) = glm::sqrt(image.pixel(x, y));
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            iteration = 1;
         }
-    }
-    image.writeFile("test.png");
 
+        if (iteration <= 256) {
+            tracer.sample(iteration);
+            texture.upload(image.data());
+            glfwSetWindowTitle(window, ("iteration: " + std::to_string(iteration)).c_str());
+            iteration++;
+        }
+
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        glViewport(0, 0, width, height);
+
+        glClearColor(0.4f, 0.8f, 1.0f, 1.0f);
+        glClear((GL_COLOR_BUFFER_BIT));
+
+        texture.bind(0);
+        quad.draw();
+        glBindTextureUnit(0, 0);
+
+        glfwSwapBuffers(window);
+    }
+
+    image.writeFile("test.png");
+}
+
+int main() {
+    glfwInit();
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    GLFWwindow *window = glfwCreateWindow(1280, 720, "tracer", nullptr, nullptr);
+
+    glfwMakeContextCurrent(window);
+    gladLoadGL(glfwGetProcAddress);
+    renderLoop(window);
+    glfwDestroyWindow(window);
+
+    glfwTerminate();
     return 0;
 }
