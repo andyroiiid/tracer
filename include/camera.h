@@ -10,6 +10,8 @@
 
 class Camera {
 public:
+    Camera() = default;
+
     Camera(
             const glm::dvec3 &lookFrom,
             const glm::dvec3 &lookAt,
@@ -40,10 +42,10 @@ public:
     }
 
 private:
-    glm::dvec3 origin{};
-    glm::dvec3 horizontal{};
-    glm::dvec3 vertical{};
-    glm::dvec3 lowerLeftCorner{};
+    glm::dvec3 origin{0.0, 0.0, 3.0};
+    glm::dvec3 horizontal{3.0, 0.0, 0.0};
+    glm::dvec3 vertical{0.0, 3.0, 0.0};
+    glm::dvec3 lowerLeftCorner{-1.5, -1.5, -1.0};
     double lensRadius = 0.0;
 };
 

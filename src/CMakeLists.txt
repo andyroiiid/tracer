@@ -1,4 +1,13 @@
-add_executable(${PROJECT_NAME} main.cpp image.cpp sphere.cpp random.cpp diffuse_material.cpp metal_material.cpp glass_material.cpp world.cpp world.h)
+add_executable(${PROJECT_NAME}
+        main.cpp
+        image.cpp
+        sphere.cpp
+        random.cpp
+        diffuse_material.cpp
+        metal_material.cpp
+        glass_material.cpp
+        world.cpp
+        path_tracer.cpp)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE <glm/glm.hpp>)
 
