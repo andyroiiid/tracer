@@ -24,7 +24,7 @@ public:
 private:
     HittableList objects;
 
-    glm::vec3 skyColor{0.5f, 0.7f, 1.0f};
+    glm::vec3 skyColor{0.5f, 0.5f, 0.5f};
 };
 
 #endif //TRACER_WORLD_H

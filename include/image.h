@@ -27,6 +27,8 @@ public:
 
     void writeFile(const std::string &filename) const;
 
+    static glm::vec3 ACESToneMapping(const glm::vec3 &color);
+
     static glm::u8vec3 convertColor(const glm::vec3 &color);
 
 private:
