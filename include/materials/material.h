@@ -5,15 +5,9 @@
 #ifndef TRACER_MATERIAL_H
 #define TRACER_MATERIAL_H
 
-#include "tracing/ray.h"
+#include "materials/scatter_result.h"
 
 struct HitRecord;
-
-struct ScatterResult {
-    bool dropRay;
-    glm::vec3 attenuation;
-    Ray scatteredRay;
-};
 
 struct Material {
     [[nodiscard]] virtual ScatterResult scatter(const Ray &ray, const HitRecord &hit) const = 0;

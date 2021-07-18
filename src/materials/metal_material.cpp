@@ -4,7 +4,7 @@
 
 #include "materials/metal_material.h"
 
-#include "hittables/hittable.h"
+#include "hittables/hit_record.h"
 #include "random.h"
 
 ScatterResult MetalMaterial::scatter(const Ray &ray, const HitRecord &hit) const {
