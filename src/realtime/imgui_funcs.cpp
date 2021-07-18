@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "imgui_funcs.h"
+#include "realtime/imgui_funcs.h"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>

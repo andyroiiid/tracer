@@ -5,7 +5,7 @@
 #ifndef TRACER_GLASS_MATERIAL_H
 #define TRACER_GLASS_MATERIAL_H
 
-#include "material.h"
+#include "materials/material.h"
 
 class GlassMaterial : public Material {
 public:

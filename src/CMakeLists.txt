@@ -1,19 +1,23 @@
 add_executable(${PROJECT_NAME}
         main.cpp
         image.cpp
-        sphere.cpp
         random.cpp
-        diffuse_material.cpp
-        metal_material.cpp
-        glass_material.cpp
-        world.cpp
-        path_tracer.cpp
-        shader.cpp
-        quad_shader.cpp
-        quad.cpp
-        texture.cpp
-        interactive_renderer.cpp
-        imgui_funcs.cpp)
+
+        hittables/sphere.cpp
+
+        materials/diffuse_material.cpp
+        materials/metal_material.cpp
+        materials/glass_material.cpp
+
+        tracing/world.cpp
+        tracing/path_tracer.cpp
+
+        realtime/shader.cpp
+        realtime/quad_shader.cpp
+        realtime/quad.cpp
+        realtime/texture.cpp
+        realtime/interactive_renderer.cpp
+        realtime/imgui_funcs.cpp)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE <glm/glm.hpp>)
 

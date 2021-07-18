@@ -2,9 +2,9 @@
 // Created by andyroiiid on 7/16/2021.
 //
 
-#include "metal_material.h"
+#include "materials/metal_material.h"
 
-#include "hittable.h"
+#include "hittables/hittable.h"
 #include "random.h"
 
 ScatterResult MetalMaterial::scatter(const Ray &ray, const HitRecord &hit) const {

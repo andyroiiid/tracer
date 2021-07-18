@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "interactive_renderer.h"
+#include "realtime/interactive_renderer.h"
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -37,6 +37,10 @@ void InteractiveRenderer::draw() {
 }
 
 void InteractiveRenderer::ui() {
+    if (ImGui::Button("save")) {
+        pathTracer->getImage().writeFile("output.png");
+    }
+
     if (ImGui::SliderInt("down scale", &downScale, 1, 10)) {
         resourcesDirty = true;
     }

@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "texture.h"
+#include "realtime/texture.h"
 
 Texture::Texture(int width, int height) : width(width), height(height) {
     glCreateTextures(GL_TEXTURE_2D, 1, &texture);

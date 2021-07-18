@@ -6,8 +6,8 @@
 #define TRACER_PATH_TRACER_H
 
 #include "image.h"
-#include "camera.h"
-#include "world.h"
+#include "tracing/camera.h"
+#include "tracing/world.h"
 
 class PathTracer {
 public:

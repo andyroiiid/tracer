@@ -5,7 +5,7 @@
 #ifndef TRACER_MATERIAL_H
 #define TRACER_MATERIAL_H
 
-#include "ray.h"
+#include "tracing/ray.h"
 
 struct HitRecord;
 

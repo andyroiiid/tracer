@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "quad.h"
+#include "realtime/quad.h"
 
 struct Vertex {
     glm::vec2 aPosition;

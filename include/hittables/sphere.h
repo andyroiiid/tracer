@@ -5,8 +5,8 @@
 #ifndef TRACER_SPHERE_H
 #define TRACER_SPHERE_H
 
-#include "hittable.h"
-#include "material.h"
+#include "hittables/hittable.h"
+#include "materials/material.h"
 
 class Sphere : public Hittable {
 public:

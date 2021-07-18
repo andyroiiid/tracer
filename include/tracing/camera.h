@@ -5,8 +5,8 @@
 #ifndef TRACER_CAMERA_H
 #define TRACER_CAMERA_H
 
-#include "ray.h"
 #include "random.h"
+#include "tracing/ray.h"
 
 class Camera {
 public:

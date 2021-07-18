@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "quad_shader.h"
+#include "realtime/quad_shader.h"
 
 QuadShader::QuadShader() : Shader(R"GLSL(
 #version 450 core

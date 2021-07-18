@@ -5,7 +5,7 @@
 #ifndef TRACER_DIFFUSE_MATERIAL_H
 #define TRACER_DIFFUSE_MATERIAL_H
 
-#include "material.h"
+#include "materials/material.h"
 
 class DiffuseMaterial : public Material {
 public:

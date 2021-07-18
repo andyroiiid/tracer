@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "shader.h"
+#include "realtime/shader.h"
 
 Shader::Shader(const std::string &vertexSource, const std::string &fragmentSource) {
     GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexSource.c_str());

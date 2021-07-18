@@ -2,15 +2,15 @@
 // Created by andyroiiid on 7/16/2021.
 //
 
-#include "world.h"
+#include "tracing/world.h"
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "sphere.h"
-#include "diffuse_material.h"
-#include "metal_material.h"
-#include "glass_material.h"
+#include "hittables/sphere.h"
+#include "materials/diffuse_material.h"
+#include "materials/metal_material.h"
+#include "materials/glass_material.h"
 
 World::World() {
     std::shared_ptr<Material> metal = std::make_shared<MetalMaterial>(glm::vec3{0.8f, 0.8f, 0.8f}, 0.3);

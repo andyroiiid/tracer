@@ -2,9 +2,9 @@
 // Created by andyroiiid on 7/16/2021.
 //
 
-#include "glass_material.h"
+#include "materials/glass_material.h"
 
-#include "hittable.h"
+#include "hittables/hittable.h"
 #include "random.h"
 
 ScatterResult GlassMaterial::scatter(const Ray &ray, const HitRecord &hit) const {

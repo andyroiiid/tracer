@@ -5,7 +5,7 @@
 #ifndef TRACER_METAL_MATERIAL_H
 #define TRACER_METAL_MATERIAL_H
 
-#include "material.h"
+#include "materials/material.h"
 
 class MetalMaterial : public Material {
 public:

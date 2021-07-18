@@ -2,7 +2,7 @@
 // Created by andyroiiid on 7/16/2021.
 //
 
-#include "sphere.h"
+#include "hittables/sphere.h"
 
 HitRecord Sphere::hit(const Ray &ray, double tMin, double tMax) const {
     glm::dvec3 oc = ray.origin - center;

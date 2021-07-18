@@ -5,7 +5,7 @@
 #ifndef TRACER_WORLD_H
 #define TRACER_WORLD_H
 
-#include "hittable_list.h"
+#include "hittables/hittable_list.h"
 
 class World : public HittableList {
 public:

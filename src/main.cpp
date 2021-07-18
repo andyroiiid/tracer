@@ -1,5 +1,5 @@
-#include "interactive_renderer.h"
-#include "imgui_funcs.h"
+#include "realtime/interactive_renderer.h"
+#include "realtime/imgui_funcs.h"
 
 void renderLoop(GLFWwindow *window) {
     int prevWidth = -1, prevHeight = -1;

@@ -5,7 +5,7 @@
 #ifndef TRACER_HITTABLE_H
 #define TRACER_HITTABLE_H
 
-#include "ray.h"
+#include "tracing/ray.h"
 
 #include <memory>
 

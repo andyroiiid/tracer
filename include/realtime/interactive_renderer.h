@@ -8,9 +8,9 @@
 #include <memory>
 
 #include "non_copyable.h"
-#include "quad.h"
-#include "texture.h"
-#include "path_tracer.h"
+#include "realtime/quad.h"
+#include "realtime/texture.h"
+#include "tracing/path_tracer.h"
 
 class InteractiveRenderer : NonCopyable {
 public:

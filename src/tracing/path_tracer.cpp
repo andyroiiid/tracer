@@ -2,11 +2,11 @@
 // Created by andyroiiid on 7/17/2021.
 //
 
-#include "path_tracer.h"
+#include "tracing/path_tracer.h"
 
 #include <execution>
 
-#include "material.h"
+#include "materials/material.h"
 
 PathTracer::PathTracer(int imageWidth, int imageHeight)
         : imageWidth(imageWidth),
