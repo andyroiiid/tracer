@@ -85,7 +85,7 @@ void InteractiveRenderer::ui() {
 
 void InteractiveRenderer::recreateResources(int width, int height) {
     texture = std::make_unique<Texture>(width, height);
-    pathTracer = std::make_unique<PathTracer>(width, height);
+    pathTracer = std::make_unique<PathTracer>(executor, width, height);
 
     recreateCamera();
 

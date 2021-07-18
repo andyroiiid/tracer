@@ -5,13 +5,15 @@
 #ifndef TRACER_PATH_TRACER_H
 #define TRACER_PATH_TRACER_H
 
+#include <taskflow/core/executor.hpp>
+
 #include "image.h"
 #include "tracing/camera.h"
 #include "tracing/world.h"
 
 class PathTracer {
 public:
-    PathTracer(int imageWidth, int imageHeight);
+    PathTracer(tf::Executor &executor, int imageWidth, int imageHeight);
 
     void sample(const Camera &camera, const World &world, int iteration, int maxDepth);
 
@@ -20,13 +22,11 @@ public:
 private:
     glm::vec3 raytrace(const Ray &ray, const World &world, int depth);
 
+    tf::Executor &executor;
+
     const int imageWidth;
     const int imageHeight;
-
     Image image;
-
-    // data for parallel execution
-    std::vector<int> ys;
 };
 
 #endif //TRACER_PATH_TRACER_H

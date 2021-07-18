@@ -4,21 +4,21 @@
 
 #include "tracing/path_tracer.h"
 
-#include <execution>
+#include <taskflow/core/algorithm/for_each.hpp>
 
 #include "materials/material.h"
 
-PathTracer::PathTracer(int imageWidth, int imageHeight)
-        : imageWidth(imageWidth),
+PathTracer::PathTracer(tf::Executor &executor, int imageWidth, int imageHeight)
+        : executor(executor),
+          imageWidth(imageWidth),
           imageHeight(imageHeight),
           image(imageWidth, imageHeight) {
-    ys.resize(imageHeight);
-    std::iota(ys.begin(), ys.end(), 0);
 }
 
 void PathTracer::sample(const Camera &camera, const World &world, int iteration, int maxDepth) {
     double alpha = 1.0 / iteration;
-    std::for_each(std::execution::par_unseq, ys.begin(), ys.end(), [&](int y) {
+    tf::Taskflow taskflow;
+    taskflow.for_each_index(0, imageHeight, 1, [&](int y) {
         for (int x = 0; x < imageWidth; x++) {
             double u = (x + randomDouble()) / (imageWidth - 1);
             double v = (y + randomDouble()) / (imageHeight - 1);
@@ -26,6 +26,7 @@ void PathTracer::sample(const Camera &camera, const World &world, int iteration,
             image.pixel(x, y) = glm::mix(image.pixel(x, y), color, alpha); // blend with previous samples
         }
     });
+    executor.run(taskflow).get();
 }
 
 glm::vec3 PathTracer::raytrace(const Ray &ray, const World &world, int depth) {
