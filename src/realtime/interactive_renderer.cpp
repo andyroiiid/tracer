@@ -93,7 +93,7 @@ void InteractiveRenderer::recreateResources(int width, int height) {
 }
 
 void InteractiveRenderer::recreateCamera() {
-    constexpr glm::vec3 target{0.0f, 0.0f, 0.0f};
+    constexpr glm::vec3 target{0.0f, 1.0f, 0.0f};
     constexpr glm::dvec3 up{0.0, 1.0, 0.0};
 
     camera = Camera(

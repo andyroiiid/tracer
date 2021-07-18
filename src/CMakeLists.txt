@@ -5,6 +5,7 @@ add_executable(${PROJECT_NAME}
 
         hittables/sphere.cpp
         hittables/rect.cpp
+        hittables/box.cpp
 
         materials/diffuse_material.cpp
         materials/metal_material.cpp
