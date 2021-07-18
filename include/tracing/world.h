@@ -7,19 +7,23 @@
 
 #include "hittables/hittable_list.h"
 
-class World : public HittableList {
+class World {
 public:
     World();
 
     bool ui();
 
+    [[nodiscard]] inline HitRecord hit(const Ray &ray, double tMin, double tMax) const {
+        return objects.hit(ray, tMin, tMax);
+    }
+
     [[nodiscard]] inline glm::vec3 traceSky(const Ray &ray) const {
-        const glm::dvec3 direction = glm::normalize(ray.direction);
-        return glm::mix(groundColor, skyColor, direction.y * 0.5 + 0.5);
+        return skyColor;
     }
 
 private:
-    glm::vec3 groundColor{1.0f};
+    HittableList objects;
+
     glm::vec3 skyColor{0.5f, 0.7f, 1.0f};
 };
 
