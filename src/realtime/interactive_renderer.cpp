@@ -14,20 +14,27 @@ void InteractiveRenderer::resizeWindow(int newWidth, int newHeight) {
 }
 
 void InteractiveRenderer::update() {
-    if (resourcesDirty) {
-        recreateResources(windowWidth / downScale, windowHeight / downScale);
+    if (renderFuture.valid()) {
+        if (renderFuture.wait_for(std::chrono::microseconds(1)) == std::future_status::ready) {
+            renderFuture.get();
+            texture->upload(pathTracer->getImage().data());
+            nextIteration++;
+        }
+    } else {
+        // only recreate resources when not rendering
+        if (resourcesDirty) {
+            recreateResources(windowWidth / downScale, windowHeight / downScale);
+        }
+        if (cameraDirty) {
+            recreateCamera();
+        }
+
+        if (nextIteration > iterationTarget) return;
+
+        renderFuture = executor.async([this] {
+            pathTracer->sample(camera, world, nextIteration, maxDepth);
+        });
     }
-
-    if (cameraDirty) {
-        recreateCamera();
-    }
-
-    if (nextIteration > iterationTarget) return;
-
-    pathTracer->sample(camera, world, nextIteration, maxDepth);
-    texture->upload(pathTracer->getImage().data());
-
-    nextIteration++;
 }
 
 void InteractiveRenderer::draw() {

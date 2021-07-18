@@ -25,4 +25,4 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glad glfw glm imgui stb)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad glfw glm imgui stb Taskflow)

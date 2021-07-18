@@ -6,6 +6,7 @@
 #define TRACER_INTERACTIVE_RENDERER_H
 
 #include <memory>
+#include <taskflow/core/executor.hpp>
 
 #include "non_copyable.h"
 #include "realtime/quad.h"
@@ -35,7 +36,7 @@ private:
 
     int windowWidth = 1;
     int windowHeight = 1;
-    int downScale = 5;
+    int downScale = 4;
     int maxDepth = 32;
 
     bool cameraDirty = true;
@@ -51,8 +52,12 @@ private:
     Camera camera;
     World world;
 
+    tf::Executor executor;
+
     int nextIteration = 1;
     int iterationTarget = 64;
+
+    tf::Future<void> renderFuture;
 };
 
 #endif //TRACER_INTERACTIVE_RENDERER_H
