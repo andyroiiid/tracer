@@ -4,6 +4,7 @@ add_executable(${PROJECT_NAME}
         random.cpp
 
         hittables/sphere.cpp
+        hittables/rect.cpp
 
         materials/diffuse_material.cpp
         materials/metal_material.cpp

@@ -25,5 +25,5 @@ HitRecord Sphere::hit(const Ray &ray, double tMin, double tMax) const {
     }
 
     glm::dvec3 normal = (ray.at(root) - center) / radius;
-    return HitRecord(true, root, ray, normal, material);
+    return HitRecord(root, ray, normal, material);
 }

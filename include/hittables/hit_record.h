@@ -14,8 +14,8 @@ struct Material;
 struct HitRecord {
     HitRecord() = default; // no hit
 
-    HitRecord(bool hit, double t, const Ray &ray, const glm::dvec3 &outwardNormal, std::shared_ptr<Material> material)
-            : hit(hit),
+    HitRecord(double t, const Ray &ray, const glm::dvec3 &outwardNormal, std::shared_ptr<Material> material)
+            : hit(true),
               t(t),
               point(ray.at(t)),
               frontFace(glm::dot(ray.direction, outwardNormal) < 0.0),
