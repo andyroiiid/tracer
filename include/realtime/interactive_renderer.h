@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <taskflow/core/executor.hpp>
+#include <GLFW/glfw3.h>
 
 #include "non_copyable.h"
 #include "realtime/quad.h"
@@ -19,7 +20,11 @@ public:
 
     inline void resetIteration() { nextIteration = 1; }
 
-    void update();
+    void startMoving(GLFWwindow *window);
+
+    void stopMoving(GLFWwindow *window);
+
+    void update(double deltaTime, GLFWwindow *window);
 
     void draw();
 
@@ -61,6 +66,10 @@ private:
     int iterationTarget = 64;
 
     tf::Future<void> renderFuture;
+
+    bool moving = false;
+    double prevXPos = 0.0f;
+    double prevYPos = 0.0f;
 };
 
 #endif //TRACER_INTERACTIVE_RENDERER_H

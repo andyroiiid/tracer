@@ -13,7 +13,68 @@ void InteractiveRenderer::resizeWindow(int newWidth, int newHeight) {
     resourcesDirty = true;
 }
 
-void InteractiveRenderer::update() {
+void InteractiveRenderer::startMoving(GLFWwindow *window) {
+    moving = true;
+    glfwGetCursorPos(window, &prevXPos, &prevYPos);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void InteractiveRenderer::stopMoving(GLFWwindow *window) {
+    moving = false;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
+    if (moving) {
+        glm::vec3 forward{-glm::cos(cameraYaw), 0.0f, -glm::sin(cameraYaw)};
+        glm::vec3 right{-glm::sin(cameraYaw), 0.0f, glm::cos(cameraYaw)};
+        glm::vec3 up{0.0f, 1.0f, 0.0f};
+
+        float moveSpeed = 5.0f * float(deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_W)) {
+            cameraPosition += forward * moveSpeed;
+            cameraDirty = true;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S)) {
+            cameraPosition -= forward * moveSpeed;
+            cameraDirty = true;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A)) {
+            cameraPosition += right * moveSpeed;
+            cameraDirty = true;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D)) {
+            cameraPosition -= right * moveSpeed;
+            cameraDirty = true;
+        }
+        if (glfwGetKey(window, GLFW_KEY_E)) {
+            cameraPosition += up * moveSpeed;
+            cameraDirty = true;
+        }
+        if (glfwGetKey(window, GLFW_KEY_Q)) {
+            cameraPosition -= up * moveSpeed;
+            cameraDirty = true;
+        }
+
+        double currXPos, currYPos;
+        glfwGetCursorPos(window, &currXPos, &currYPos);
+
+        auto deltaXPos = float(currXPos - prevXPos) * 0.002f;
+        auto deltaYPos = float(currYPos - prevYPos) * 0.002f;
+        if (deltaXPos != 0.0) {
+            cameraYaw = cameraYaw + deltaXPos;
+            cameraDirty = true;
+        }
+        if (deltaYPos != 0.0) {
+            cameraPitch = glm::clamp(cameraPitch + deltaYPos, glm::radians(-89.9f), glm::radians(89.9f));
+            cameraDirty = true;
+        }
+
+        prevXPos = currXPos;
+        prevYPos = currYPos;
+    }
+
     if (renderFuture.valid()) {
         if (renderFuture.wait_for(std::chrono::microseconds(1)) == std::future_status::ready) {
             renderFuture.get();
