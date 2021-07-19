@@ -42,6 +42,9 @@ private:
     bool cameraDirty = true;
 
     glm::vec3 cameraPosition{3.0f, 4.0f, 5.0f};
+    float cameraYaw = 0.0f;
+    float cameraPitch = 0.0f;
+
     float cameraFoV = glm::radians(45.0f);
     float cameraAperture = 0.1f;
     float cameraFocusDistance = 6.0f;

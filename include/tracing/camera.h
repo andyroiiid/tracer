@@ -13,8 +13,8 @@ public:
     Camera() = default;
 
     Camera(
-            const glm::dvec3 &lookFrom,
-            const glm::dvec3 &lookAt,
+            const glm::dvec3 &position,
+            const glm::dvec3 &forward,
             const glm::dvec3 &up,
             double vFoV,
             double aspectRatio,
@@ -24,11 +24,11 @@ public:
         double viewportHeight = 2.0 * glm::tan(vFoV / 2.0);
         double viewportWidth = aspectRatio * viewportHeight;
 
-        glm::dvec3 w = glm::normalize(lookFrom - lookAt);
+        glm::dvec3 w = glm::normalize(forward);
         localXUnit = glm::normalize(glm::cross(up, w));
         localYUnit = glm::cross(w, localXUnit);
 
-        origin = lookFrom;
+        origin = position;
         horizontal = focusDistance * viewportWidth * localXUnit;
         vertical = focusDistance * viewportHeight * localYUnit;
         lowerLeftCorner = origin - horizontal * 0.5 - vertical * 0.5 - focusDistance * w;

@@ -65,6 +65,12 @@ void InteractiveRenderer::ui() {
         if (ImGui::InputFloat3("position", glm::value_ptr(cameraPosition))) {
             cameraDirty = true;
         }
+        if (ImGui::SliderAngle("yaw", &cameraYaw, 0.0f, 360.0f)) {
+            cameraDirty = true;
+        }
+        if (ImGui::SliderAngle("pitch", &cameraPitch, -89.9f, 89.9f)) {
+            cameraDirty = true;
+        }
         if (ImGui::SliderAngle("fov", &cameraFoV, 1.0f, 179.0f)) {
             cameraDirty = true;
         }
@@ -93,11 +99,16 @@ void InteractiveRenderer::recreateResources(int width, int height) {
 }
 
 void InteractiveRenderer::recreateCamera() {
-    constexpr glm::vec3 target{0.0f, 1.0f, 0.0f};
+    glm::vec3 forward = glm::vec3{
+            glm::cos(cameraPitch) * glm::cos(cameraYaw),
+            glm::sin(cameraPitch),
+            glm::cos(cameraPitch) * glm::sin(cameraYaw)
+    };
+
     constexpr glm::dvec3 up{0.0, 1.0, 0.0};
 
     camera = Camera(
-            cameraPosition, target, up,
+            cameraPosition, forward, up,
             cameraFoV,
             double(windowWidth) / double(windowHeight),
             cameraAperture,
