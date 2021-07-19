@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
         materials/diffuse_material.cpp
         materials/metal_material.cpp
         materials/glass_material.cpp
+        materials/light_material.cpp
 
         tracing/world.cpp
         tracing/path_tracer.cpp

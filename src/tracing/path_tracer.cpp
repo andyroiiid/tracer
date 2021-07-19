@@ -34,11 +34,11 @@ glm::vec3 PathTracer::raytrace(const Ray &ray, const World &world, int depth) {
     HitRecord hit = world.hit(ray, 0.0001, std::numeric_limits<double>::infinity());
     if (hit.hit) {
         ScatterResult scatter = hit.material->scatter(ray, hit);
-        if (scatter.dropRay) {
-            return {0.0f, 0.0f, 0.0f};
-        } else {
-            return scatter.attenuation * raytrace(scatter.scatteredRay, world, depth - 1);
+        glm::vec3 color = hit.material->emitted();
+        if (!scatter.dropRay) {
+            color += scatter.attenuation * raytrace(scatter.scatteredRay, world, depth - 1);
         }
+        return color;
     }
     return world.traceSky(ray);
 }
