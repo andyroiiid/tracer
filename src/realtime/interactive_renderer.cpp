@@ -26,18 +26,18 @@ void InteractiveRenderer::stopMoving(GLFWwindow *window) {
 
 void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
     if (moving) {
-        glm::vec3 forward{-glm::cos(cameraYaw), 0.0f, -glm::sin(cameraYaw)};
-        glm::vec3 right{-glm::sin(cameraYaw), 0.0f, glm::cos(cameraYaw)};
-        glm::vec3 up{0.0f, 1.0f, 0.0f};
+        glm::dvec3 forward{glm::sin(cameraYaw), 0.0, -glm::cos(cameraYaw)};
+        glm::dvec3 right{glm::cos(cameraYaw), 0.0, glm::sin(cameraYaw)};
+        constexpr glm::dvec3 up{0.0, 1.0, 0.0};
 
-        float moveSpeed = 5.0f * float(deltaTime);
+        double moveSpeed = 5.0 * deltaTime;
 
         if (glfwGetKey(window, GLFW_KEY_W)) {
-            cameraPosition += forward * moveSpeed;
+            cameraPosition -= forward * moveSpeed;
             cameraDirty = true;
         }
         if (glfwGetKey(window, GLFW_KEY_S)) {
-            cameraPosition -= forward * moveSpeed;
+            cameraPosition += forward * moveSpeed;
             cameraDirty = true;
         }
         if (glfwGetKey(window, GLFW_KEY_A)) {
@@ -60,14 +60,20 @@ void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
         double currXPos, currYPos;
         glfwGetCursorPos(window, &currXPos, &currYPos);
 
-        auto deltaXPos = float(currXPos - prevXPos) * 0.002f;
-        auto deltaYPos = float(currYPos - prevYPos) * 0.002f;
+        double deltaXPos = (currXPos - prevXPos) * 0.002;
+        double deltaYPos = (currYPos - prevYPos) * 0.002;
         if (deltaXPos != 0.0) {
             cameraYaw = cameraYaw + deltaXPos;
+            constexpr auto two_pi = glm::two_pi<double>();
+            if (cameraYaw > two_pi) {
+                cameraYaw -= two_pi;
+            } else if (cameraYaw < 0.0) {
+                cameraYaw += two_pi;
+            }
             cameraDirty = true;
         }
         if (deltaYPos != 0.0) {
-            cameraPitch = glm::clamp(cameraPitch + deltaYPos, glm::radians(-89.9f), glm::radians(89.9f));
+            cameraPitch = glm::clamp(cameraPitch + deltaYPos, glm::radians(-89.9), glm::radians(89.9));
             cameraDirty = true;
         }
 
@@ -123,22 +129,17 @@ void InteractiveRenderer::ui() {
     }
 
     if (ImGui::CollapsingHeader("camera")) {
-        if (ImGui::InputFloat3("position", glm::value_ptr(cameraPosition))) {
-            cameraDirty = true;
-        }
-        if (ImGui::SliderAngle("yaw", &cameraYaw, 0.0f, 360.0f)) {
-            cameraDirty = true;
-        }
-        if (ImGui::SliderAngle("pitch", &cameraPitch, -89.9f, 89.9f)) {
-            cameraDirty = true;
-        }
+        ImGui::LabelText("position", "%.2f, %.2f, %.2f", cameraPosition.x, cameraPosition.y, cameraPosition.z);
+        ImGui::LabelText("yaw", "%f", glm::degrees(cameraYaw));
+        ImGui::LabelText("pitch", "%f", glm::degrees(cameraPitch));
+
         if (ImGui::SliderAngle("fov", &cameraFoV, 1.0f, 179.0f)) {
             cameraDirty = true;
         }
         if (ImGui::SliderFloat("aperture", &cameraAperture, 0.0f, 1.0f)) {
             cameraDirty = true;
         }
-        if (ImGui::SliderFloat("focus distance", &cameraFocusDistance, 0.1f, 10.0f)) {
+        if (ImGui::SliderFloat("focus distance", &cameraFocusDistance, 0.1f, 20.0f)) {
             cameraDirty = true;
         }
     }
@@ -160,10 +161,10 @@ void InteractiveRenderer::recreateResources(int width, int height) {
 }
 
 void InteractiveRenderer::recreateCamera() {
-    glm::vec3 forward = glm::vec3{
-            glm::cos(cameraPitch) * glm::cos(cameraYaw),
+    glm::dvec3 forward{
+            glm::cos(cameraPitch) * glm::sin(cameraYaw),
             glm::sin(cameraPitch),
-            glm::cos(cameraPitch) * glm::sin(cameraYaw)
+            -glm::cos(cameraPitch) * glm::cos(cameraYaw)
     };
 
     constexpr glm::dvec3 up{0.0, 1.0, 0.0};

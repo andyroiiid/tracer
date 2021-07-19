@@ -46,13 +46,13 @@ private:
 
     bool cameraDirty = true;
 
-    glm::vec3 cameraPosition{3.0f, 4.0f, 5.0f};
-    float cameraYaw = 0.0f;
-    float cameraPitch = 0.0f;
+    glm::dvec3 cameraPosition{0.0, 6.0, 8.0};
+    double cameraYaw = glm::pi<double>();
+    double cameraPitch = glm::pi<double>() / 6.0;
 
     float cameraFoV = glm::radians(45.0f);
     float cameraAperture = 0.1f;
-    float cameraFocusDistance = 6.0f;
+    float cameraFocusDistance = 10.0f;
 
     std::unique_ptr<Texture> texture;
     std::unique_ptr<PathTracer> pathTracer;
