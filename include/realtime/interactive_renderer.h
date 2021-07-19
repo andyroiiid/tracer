@@ -41,18 +41,18 @@ private:
 
     int windowWidth = 1;
     int windowHeight = 1;
-    int downScale = 4;
-    int maxDepth = 32;
+    int downScale = 8;
+    int maxDepth = 16;
 
     bool cameraDirty = true;
 
-    glm::dvec3 cameraPosition{0.0, 6.0, 8.0};
+    glm::dvec3 cameraPosition{0.0, 16.0, 16.0};
     double cameraYaw = glm::pi<double>();
-    double cameraPitch = glm::pi<double>() / 6.0;
+    double cameraPitch = glm::radians(50.0);
 
     float cameraFoV = glm::radians(45.0f);
     float cameraAperture = 0.1f;
-    float cameraFocusDistance = 10.0f;
+    float cameraFocusDistance = 24.0f;
 
     std::unique_ptr<Texture> texture;
     std::unique_ptr<PathTracer> pathTracer;

@@ -124,7 +124,7 @@ void InteractiveRenderer::ui() {
         if (iterationTarget < nextIteration) resetIteration();
     }
 
-    if (ImGui::SliderInt("max depth", &maxDepth, 1, 64)) {
+    if (ImGui::SliderInt("max depth", &maxDepth, 1, 32)) {
         resetIteration();
     }
 
@@ -139,7 +139,7 @@ void InteractiveRenderer::ui() {
         if (ImGui::SliderFloat("aperture", &cameraAperture, 0.0f, 1.0f)) {
             cameraDirty = true;
         }
-        if (ImGui::SliderFloat("focus distance", &cameraFocusDistance, 0.1f, 20.0f)) {
+        if (ImGui::SliderFloat("focus distance", &cameraFocusDistance, 0.1f, 100.0f)) {
             cameraDirty = true;
         }
     }
