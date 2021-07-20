@@ -12,58 +12,30 @@ void InteractiveRenderer::resizeWindow(int newWidth, int newHeight) {
     resourcesDirty = true;
 }
 
-void InteractiveRenderer::startMoving(GLFWwindow *window) {
-    moving = true;
-    glfwGetCursorPos(window, &prevXPos, &prevYPos);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-void InteractiveRenderer::stopMoving(GLFWwindow *window) {
-    moving = false;
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-}
-
-void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
-    if (moving) {
-        glm::dvec3 forward = camera.forward();
-        glm::dvec3 right = camera.right();
-        constexpr glm::dvec3 up{0.0, 1.0, 0.0};
-
-        double moveSpeed = 5.0 * deltaTime;
-
-        if (glfwGetKey(window, GLFW_KEY_W)) {
-            camera.move(-forward * moveSpeed);
-        }
-        if (glfwGetKey(window, GLFW_KEY_S)) {
-            camera.move(forward * moveSpeed);
-        }
-        if (glfwGetKey(window, GLFW_KEY_A)) {
-            camera.move(right * moveSpeed);
-        }
-        if (glfwGetKey(window, GLFW_KEY_D)) {
-            camera.move(-right * moveSpeed);
-        }
-        if (glfwGetKey(window, GLFW_KEY_E)) {
-            camera.move(up * moveSpeed);
-        }
-        if (glfwGetKey(window, GLFW_KEY_Q)) {
-            camera.move(-up * moveSpeed);
+void InteractiveRenderer::update(double deltaTime) {
+    if (input.update()) {
+        glm::dvec3 direction{
+                input.axisRight(),
+                input.axisUp(),
+                input.axisForward()
+        };
+        if (direction.x != 0.0 || direction.y != 0.0 || direction.z != 0.0) {
+            glm::dvec3 forward = camera.forward();
+            glm::dvec3 right = camera.right();
+            constexpr glm::dvec3 up{0.0, 1.0, 0.0};
+            direction = glm::normalize(direction.x * right + direction.y * up + direction.z * forward);
+            camera.move(direction * 5.0 * deltaTime);
         }
 
-        double currXPos, currYPos;
-        glfwGetCursorPos(window, &currXPos, &currYPos);
-
-        double deltaYaw = (currXPos - prevXPos) * 0.002;
-        double deltaPitch = (currYPos - prevYPos) * 0.002;
-        if (deltaYaw != 0.0) {
-            camera.rotateYaw(deltaYaw);
-        }
-        if (deltaPitch != 0.0) {
-            camera.rotatePitch(deltaPitch);
+        double turn = input.axisTurn();
+        if (turn != 0.0) {
+            camera.rotateYaw(turn);
         }
 
-        prevXPos = currXPos;
-        prevYPos = currYPos;
+        double lookUp = input.axisLookUp();
+        if (lookUp != 0.0) {
+            camera.rotatePitch(lookUp);
+        }
     }
 
     if (renderFuture.valid()) {

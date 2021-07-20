@@ -3,9 +3,8 @@
 
 void renderLoop(GLFWwindow *window) {
     int prevWidth = -1, prevHeight = -1;
-    InteractiveRenderer renderer;
+    InteractiveRenderer renderer(window);
 
-    bool prevRightPressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
     double prevTime = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -18,16 +17,8 @@ void renderLoop(GLFWwindow *window) {
             prevHeight = currHeight;
         }
 
-        bool currRightPressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
-        if (currRightPressed && !prevRightPressed) {
-            renderer.startMoving(window);
-        } else if (!currRightPressed && prevRightPressed) {
-            renderer.stopMoving(window);
-        }
-        prevRightPressed = currRightPressed;
-
         double currTime = glfwGetTime();
-        renderer.update(currTime - prevTime, window);
+        renderer.update(currTime - prevTime);
         prevTime = currTime;
 
         glViewport(0, 0, currWidth, currHeight);

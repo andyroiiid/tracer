@@ -17,9 +17,9 @@ public:
 
     [[nodiscard]] const Camera &getCamera() const { return camera; }
 
-    [[nodiscard]] glm::dvec3 forward() const { return {glm::sin(yaw), 0.0, -glm::cos(yaw)}; }
+    [[nodiscard]] glm::dvec3 forward() const { return {-glm::sin(yaw), 0.0, glm::cos(yaw)}; }
 
-    [[nodiscard]] glm::dvec3 right() const { return {glm::cos(yaw), 0.0, glm::sin(yaw)}; }
+    [[nodiscard]] glm::dvec3 right() const { return {-glm::cos(yaw), 0.0, -glm::sin(yaw)}; }
 
     inline void move(const glm::dvec3 &deltaPosition) {
         position += deltaPosition;

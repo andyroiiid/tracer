@@ -13,19 +13,18 @@
 #include "realtime/quad.h"
 #include "realtime/texture.h"
 #include "tracing/path_tracer.h"
+#include "realtime/interactive_input.h"
 #include "realtime/interactive_camera.h"
 
 class InteractiveRenderer : NonCopyable {
 public:
+    explicit InteractiveRenderer(GLFWwindow *window) : input(window) {}
+
     void resizeWindow(int newWidth, int newHeight);
 
     inline void resetIteration() { nextIteration = 1; }
 
-    void startMoving(GLFWwindow *window);
-
-    void stopMoving(GLFWwindow *window);
-
-    void update(double deltaTime, GLFWwindow *window);
+    void update(double deltaTime);
 
     void draw();
 
@@ -46,6 +45,7 @@ private:
     std::unique_ptr<Texture> texture;
     std::unique_ptr<PathTracer> pathTracer;
 
+    InteractiveInput input;
     InteractiveCamera camera;
     World world;
 
@@ -55,10 +55,6 @@ private:
     int iterationTarget = 64;
 
     tf::Future<void> renderFuture;
-
-    bool moving = false;
-    double prevXPos = 0.0f;
-    double prevYPos = 0.0f;
 };
 
 #endif //TRACER_INTERACTIVE_RENDERER_H
