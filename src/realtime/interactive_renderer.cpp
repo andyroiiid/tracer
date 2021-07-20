@@ -5,7 +5,6 @@
 #include "realtime/interactive_renderer.h"
 
 #include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
 
 void InteractiveRenderer::resizeWindow(int newWidth, int newHeight) {
     windowWidth = newWidth;
@@ -26,55 +25,41 @@ void InteractiveRenderer::stopMoving(GLFWwindow *window) {
 
 void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
     if (moving) {
-        glm::dvec3 forward{glm::sin(cameraYaw), 0.0, -glm::cos(cameraYaw)};
-        glm::dvec3 right{glm::cos(cameraYaw), 0.0, glm::sin(cameraYaw)};
+        glm::dvec3 forward = camera.forward();
+        glm::dvec3 right = camera.right();
         constexpr glm::dvec3 up{0.0, 1.0, 0.0};
 
         double moveSpeed = 5.0 * deltaTime;
 
         if (glfwGetKey(window, GLFW_KEY_W)) {
-            cameraPosition -= forward * moveSpeed;
-            cameraDirty = true;
+            camera.move(-forward * moveSpeed);
         }
         if (glfwGetKey(window, GLFW_KEY_S)) {
-            cameraPosition += forward * moveSpeed;
-            cameraDirty = true;
+            camera.move(forward * moveSpeed);
         }
         if (glfwGetKey(window, GLFW_KEY_A)) {
-            cameraPosition += right * moveSpeed;
-            cameraDirty = true;
+            camera.move(right * moveSpeed);
         }
         if (glfwGetKey(window, GLFW_KEY_D)) {
-            cameraPosition -= right * moveSpeed;
-            cameraDirty = true;
+            camera.move(-right * moveSpeed);
         }
         if (glfwGetKey(window, GLFW_KEY_E)) {
-            cameraPosition += up * moveSpeed;
-            cameraDirty = true;
+            camera.move(up * moveSpeed);
         }
         if (glfwGetKey(window, GLFW_KEY_Q)) {
-            cameraPosition -= up * moveSpeed;
-            cameraDirty = true;
+            camera.move(-up * moveSpeed);
         }
 
         double currXPos, currYPos;
         glfwGetCursorPos(window, &currXPos, &currYPos);
 
-        double deltaXPos = (currXPos - prevXPos) * 0.002;
-        double deltaYPos = (currYPos - prevYPos) * 0.002;
-        if (deltaXPos != 0.0) {
-            cameraYaw = cameraYaw + deltaXPos;
-            constexpr auto two_pi = glm::two_pi<double>();
-            if (cameraYaw > two_pi) {
-                cameraYaw -= two_pi;
-            } else if (cameraYaw < 0.0) {
-                cameraYaw += two_pi;
-            }
-            cameraDirty = true;
+        double deltaYaw = (currXPos - prevXPos) * 0.002;
+        double deltaPitch = (currYPos - prevYPos) * 0.002;
+        if (deltaYaw != 0.0) {
+            camera.rotateYaw(deltaYaw);
         }
-        if (deltaYPos != 0.0) {
-            cameraPitch = glm::clamp(cameraPitch + deltaYPos, glm::radians(-89.9), glm::radians(89.9));
-            cameraDirty = true;
+        if (deltaPitch != 0.0) {
+            camera.rotatePitch(deltaPitch);
         }
 
         prevXPos = currXPos;
@@ -92,14 +77,14 @@ void InteractiveRenderer::update(double deltaTime, GLFWwindow *window) {
         if (resourcesDirty) {
             recreateResources(windowWidth / downScale, windowHeight / downScale);
         }
-        if (cameraDirty) {
-            recreateCamera();
+        if (camera.checkRecreate(windowWidth, windowHeight)) {
+            resetIteration();
         }
 
         if (nextIteration > iterationTarget) return;
 
         renderFuture = executor.async([this] {
-            pathTracer->sample(camera, world, nextIteration, maxDepth);
+            pathTracer->sample(camera.getCamera(), world, nextIteration, maxDepth);
         });
     }
 }
@@ -128,21 +113,7 @@ void InteractiveRenderer::ui() {
         resetIteration();
     }
 
-    if (ImGui::CollapsingHeader("camera")) {
-        ImGui::LabelText("position", "%.2f, %.2f, %.2f", cameraPosition.x, cameraPosition.y, cameraPosition.z);
-        ImGui::LabelText("yaw", "%f", glm::degrees(cameraYaw));
-        ImGui::LabelText("pitch", "%f", glm::degrees(cameraPitch));
-
-        if (ImGui::SliderAngle("fov", &cameraFoV, 1.0f, 179.0f)) {
-            cameraDirty = true;
-        }
-        if (ImGui::SliderFloat("aperture", &cameraAperture, 0.0f, 1.0f)) {
-            cameraDirty = true;
-        }
-        if (ImGui::SliderFloat("focus distance", &cameraFocusDistance, 0.1f, 100.0f)) {
-            cameraDirty = true;
-        }
-    }
+    camera.ui();
 
     if (ImGui::CollapsingHeader("world")) {
         if (world.ui()) {
@@ -154,30 +125,6 @@ void InteractiveRenderer::ui() {
 void InteractiveRenderer::recreateResources(int width, int height) {
     texture = std::make_unique<Texture>(width, height);
     pathTracer = std::make_unique<PathTracer>(executor, width, height);
-
-    recreateCamera();
-
+    camera.markDirty();
     resourcesDirty = false;
-}
-
-void InteractiveRenderer::recreateCamera() {
-    glm::dvec3 forward{
-            glm::cos(cameraPitch) * glm::sin(cameraYaw),
-            glm::sin(cameraPitch),
-            -glm::cos(cameraPitch) * glm::cos(cameraYaw)
-    };
-
-    constexpr glm::dvec3 up{0.0, 1.0, 0.0};
-
-    camera = Camera(
-            cameraPosition, forward, up,
-            cameraFoV,
-            double(windowWidth) / double(windowHeight),
-            cameraAperture,
-            cameraFocusDistance
-    );
-
-    resetIteration();
-
-    cameraDirty = false;
 }

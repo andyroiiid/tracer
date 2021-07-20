@@ -19,6 +19,7 @@ add_executable(${PROJECT_NAME}
         realtime/quad_shader.cpp
         realtime/quad.cpp
         realtime/texture.cpp
+        realtime/interactive_camera.cpp
         realtime/interactive_renderer.cpp
         realtime/imgui_funcs.cpp)
 

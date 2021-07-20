@@ -13,6 +13,7 @@
 #include "realtime/quad.h"
 #include "realtime/texture.h"
 #include "tracing/path_tracer.h"
+#include "realtime/interactive_camera.h"
 
 class InteractiveRenderer : NonCopyable {
 public:
@@ -33,8 +34,6 @@ public:
 private:
     void recreateResources(int width, int height);
 
-    void recreateCamera();
-
     Quad quad;
 
     bool resourcesDirty = true;
@@ -44,20 +43,10 @@ private:
     int downScale = 8;
     int maxDepth = 16;
 
-    bool cameraDirty = true;
-
-    glm::dvec3 cameraPosition{0.0, 16.0, 16.0};
-    double cameraYaw = glm::pi<double>();
-    double cameraPitch = glm::radians(50.0);
-
-    float cameraFoV = glm::radians(45.0f);
-    float cameraAperture = 0.1f;
-    float cameraFocusDistance = 24.0f;
-
     std::unique_ptr<Texture> texture;
     std::unique_ptr<PathTracer> pathTracer;
 
-    Camera camera;
+    InteractiveCamera camera;
     World world;
 
     tf::Executor executor;
