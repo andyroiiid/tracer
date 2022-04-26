@@ -1,8 +1,3 @@
 # CLion
 /.idea
 /cmake-build-*
-
-# Dependencies
-/dependencies/glm
-/dependencies/glfw
-/dependencies/taskflow

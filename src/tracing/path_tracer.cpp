@@ -4,7 +4,7 @@
 
 #include "tracing/path_tracer.h"
 
-#include <taskflow/core/algorithm/for_each.hpp>
+#include <taskflow/algorithm/for_each.hpp>
 
 #include "materials/material.h"
 
